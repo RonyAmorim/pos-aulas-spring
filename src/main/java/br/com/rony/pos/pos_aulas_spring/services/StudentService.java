@@ -19,14 +19,11 @@ public class StudentService {
 
     public Student saveStudent(Student student){
         Objects.requireNonNull(student, "The student cannot be null.");
-        if(student.getId() == null){
-            throw new IllegalArgumentException("The ID cannot be null.");
-        }
         if(student.getName() == null || student.getName().trim().isEmpty()){
             throw new IllegalArgumentException("the name can not be null or empty");
         }
-        if (repository.existsById(student.getId())) {
-            throw new IllegalArgumentException("Existing student with the same ID");
+        if (student.getId() != null && repository.existsById(student.getId())) {
+            throw new IllegalArgumentException("Existing student with the same ID. Use update for existing students.");
         }
         return repository.save(student);
     }
