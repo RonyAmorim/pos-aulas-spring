@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17.4
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: "Senh4F0rTe"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:9.1.0
+    container_name: pg-admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "pos@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "Senh4F0rTe"
+    ports:
+      - "7000:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.4
+    container_name: my-keycloak
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: "admin"
+      KC_BOOTSTRAP_ADMIN_PASSWORD: "Senh4F0rTe"
+    ports:
+      - "7001:7001"
+    command:
+      - start-dev
+      - "--http-port=7001"
+      - "--features"
+      - "authorization,organization"
+    restart: unless-stopped
+
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: my-sonarqube
+    ports:
+      - "7002:9000"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://postgres:5432/postgres
+      SONAR_JDBC_USERNAME: postgres
+      SONAR_JDBC_PASSWORD: "Senh4F0rTe"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: my-jenkins
+    ports:
+      - "7003:8080"
+      - "7004:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  pgadmin-data:
+  sonarqube_data:
+  sonarqube_extensions:
+  jenkins_home:
