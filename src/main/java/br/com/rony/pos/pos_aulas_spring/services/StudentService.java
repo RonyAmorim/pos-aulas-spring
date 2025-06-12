@@ -1,6 +1,6 @@
 package br.com.rony.pos.pos_aulas_spring.services;
 
-import br.com.rony.pos.pos_aulas_spring.entities.Student;
+import br.com.rony.pos.pos_aulas_spring.entities.StudentEntity;
 import br.com.rony.pos.pos_aulas_spring.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,38 +12,37 @@ public class StudentService {
 
     private final StudentRepository repository;
 
-    @Autowired
     public StudentService(StudentRepository repository) {
         this.repository = repository;
     }
 
-    public Student saveStudent(Student student){
-        Objects.requireNonNull(student, "The student cannot be null.");
-        if(student.getName() == null || student.getName().trim().isEmpty()){
+    public StudentEntity saveStudent(StudentEntity studentEntity){
+        Objects.requireNonNull(studentEntity, "The student cannot be null.");
+        if(studentEntity.getName() == null || studentEntity.getName().trim().isEmpty()){
             throw new IllegalArgumentException("the name can not be null or empty");
         }
-        if (student.getId() != null && repository.existsById(student.getId())) {
+        if (studentEntity.getId() != null && repository.existsById(studentEntity.getId())) {
             throw new IllegalArgumentException("Existing student with the same ID. Use update for existing students.");
         }
-        return repository.save(student);
+        return repository.save(studentEntity);
     }
 
-    public Iterable<Student> getAllStudents() {
+    public Iterable<StudentEntity> getAllStudents() {
         return repository.findAll();
     }
 
-    public Student updateStudent(Long id, Student student){
+    public StudentEntity updateStudent(Long id, StudentEntity studentEntity){
         Objects.requireNonNull(id, "The ID cannot be null.");
-        Objects.requireNonNull(student, "The student cannot be null.");
+        Objects.requireNonNull(studentEntity, "The student cannot be null.");
 
-        Student updatedStudent = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("No student found with the given ID."));
+        StudentEntity updatedStudentEntity = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("No student found with the given ID."));
 
-        if (student.getName() == null || student.getName().trim().isEmpty()) {
+        if (studentEntity.getName() == null || studentEntity.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("The name cannot be null or empty.");
         }
 
-        updatedStudent.setName(student.getName());
-        return repository.save(updatedStudent);
+        updatedStudentEntity.setName(studentEntity.getName());
+        return repository.save(updatedStudentEntity);
     }
 
     public void deleteStudent(Long id) {

@@ -1,8 +1,7 @@
 package br.com.rony.pos.pos_aulas_spring.controllers;
 
-import br.com.rony.pos.pos_aulas_spring.entities.Student;
+import br.com.rony.pos.pos_aulas_spring.entities.StudentEntity;
 import br.com.rony.pos.pos_aulas_spring.services.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 public class StudentController {
     private final StudentService studentService;
 
-    @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -28,10 +26,10 @@ public class StudentController {
     }
 
     @PostMapping("/student")
-    public ResponseEntity<?> addStudent(@Validated @RequestBody Student student){
+    public ResponseEntity<?> addStudent(@Validated @RequestBody StudentEntity studentEntity){
         try {
-            Student newStudent = studentService.saveStudent(student);
-            if (newStudent != null && newStudent.getId() != null) {
+            StudentEntity newStudentEntity = studentService.saveStudent(studentEntity);
+            if (newStudentEntity != null && newStudentEntity.getId() != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body("Student created successfully");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Student created failed: invalid data");
@@ -42,9 +40,9 @@ public class StudentController {
     }
 
     @PatchMapping("/student/{id}")
-    public ResponseEntity<?> updateStudent(@PathVariable Long id, @Validated @RequestBody Student student){
+    public ResponseEntity<?> updateStudent(@PathVariable Long id, @Validated @RequestBody StudentEntity studentEntity){
         try{
-            Student updatedStudent = studentService.updateStudent(id, student);
+            StudentEntity updatedStudentEntity = studentService.updateStudent(id, studentEntity);
             return ResponseEntity.ok("Student updated successfully");
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

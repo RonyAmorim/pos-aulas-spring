@@ -46,12 +46,14 @@
 			<scope>test</scope>
 		</dependency>
 
-
+		<!--PostgreSQL-->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- JPA and Hibernate -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -63,8 +65,6 @@
 			<artifactId>keycloak-spring-boot-starter</artifactId>
 			<version>25.0.3</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
